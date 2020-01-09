@@ -20,21 +20,26 @@ export class TreeNode {
     }
 
     const root = new TreeNode(rootValue);
-    const nodeQueue = new Array<TreeNode>();
+    const nodeQueue = new Array<TreeNode | null>();
     nodeQueue.push(root);
 
-    // TODO HERE WE HAVE BUG: check at the python implementation for fix
     for(let index = 1; index < values.length; index += 2) {
       const node = nodeQueue.shift()!;
       const leftValue = values[index];
-      if(leftValue != null) {
-        node.left = new TreeNode(leftValue);
-        nodeQueue.push(node.left);
-      }
+      const leftNode = leftValue !== null
+        ? new TreeNode(leftValue)
+        : null;
+      nodeQueue.push(leftNode);
+
       const rightValue = values[index + 1];
-      if(rightValue != null) {
-        node.right = new TreeNode(rightValue);
-        nodeQueue.push(node.right);
+      const rightNode = rightValue !== null
+        ? new TreeNode(rightValue)
+        : null;
+      nodeQueue.push(rightNode);
+
+      if(node) {
+        node.left = leftNode;
+        node.right = rightNode;
       }
     }
 
