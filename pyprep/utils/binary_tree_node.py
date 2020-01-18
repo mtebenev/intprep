@@ -16,16 +16,23 @@ class TreeNode:
         node_queue: Deque[TreeNode] = deque()
         node_queue.append(root)
 
-        for index in range(1, len(values), 2):
+        index = 1
+        while index < len(values):
             node = node_queue.popleft()
 
-            left_value = values[index]
-            left_node = TreeNode(left_value) if left_value != None else None
-            node_queue.append(left_node)
+            left_node = None
+            right_node = None
+            if index < len(values):
+                left_value = values[index]
+                left_node = TreeNode(left_value) if left_value != None else None
+                node_queue.append(left_node)
+                index += 1
 
-            right_value = values[index + 1]
-            right_node = TreeNode(right_value) if right_value != None else None
-            node_queue.append(right_node)
+            if index < len(values):
+                right_value = values[index]
+                right_node = TreeNode(right_value) if right_value != None else None
+                node_queue.append(right_node)
+                index += 1
 
             if node:
                 node.left = left_node

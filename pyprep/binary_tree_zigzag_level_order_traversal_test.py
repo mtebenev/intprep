@@ -1,12 +1,11 @@
-from utils.binary_tree_node import TreeNode
-from typing import List, Deque
-from collections import deque
-import itertools
-
 # https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
 # tags: medium, tree
 # todo: there's an interesting solution with dfs
 
+from utils.binary_tree_node import TreeNode
+from typing import List, Deque
+from collections import deque
+import itertools
 
 class Solution:
     def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:

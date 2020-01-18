@@ -23,19 +23,30 @@ export class TreeNode {
     const nodeQueue = new Array<TreeNode | null>();
     nodeQueue.push(root);
 
-    for(let index = 1; index < values.length; index += 2) {
+    let index = 1;
+    while(index < values.length) {
       const node = nodeQueue.shift()!;
-      const leftValue = values[index];
-      const leftNode = leftValue !== null
-        ? new TreeNode(leftValue)
-        : null;
-      nodeQueue.push(leftNode);
 
-      const rightValue = values[index + 1];
-      const rightNode = rightValue !== null
-        ? new TreeNode(rightValue)
-        : null;
-      nodeQueue.push(rightNode);
+      let leftNode = null;
+      let rightNode = null;
+
+      if(index < values.length) {
+        const leftValue = values[index];
+        leftNode = leftValue !== null
+          ? new TreeNode(leftValue)
+          : null;
+        nodeQueue.push(leftNode);
+        index++;
+      }
+
+      if(index < values.length) {
+        const rightValue = values[index];
+        rightNode = rightValue !== null
+          ? new TreeNode(rightValue)
+          : null;
+        nodeQueue.push(rightNode);
+        index++;
+      }
 
       if(node) {
         node.left = leftNode;
