@@ -22,4 +22,9 @@ describe('TreeNode', () => {
     expect(TreeNode.findNodeByValue(tree, 1)).toEqual(tree);
     expect(TreeNode.findNodeByValue(tree, 4)).toBeNull();
   });
+  test('To array', () => {
+    const tree = TreeNode.createFromArray([1, 2, 3]);
+    const arr = TreeNode.toArray(tree);
+    expect(arr).toEqual([1, 2, 3]);
+  });
 });
