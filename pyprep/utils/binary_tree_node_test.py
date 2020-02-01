@@ -11,3 +11,15 @@ def test_1():
 
     assert tree.right.left.val == 15
     assert tree.right.right.val == 7
+
+def test_compressed_from_list_1():
+    tree = TreeNode.create_from_list_2([1, 2])
+    assert TreeNode.to_array(tree) == [1, 2]
+
+def test_compressed_from_list_2():
+    tree = TreeNode.create_from_list_2([1, None, 2, 3, 4])
+    assert TreeNode.to_array(tree) == [1, None, 2, None, None, 3, 4]
+
+def test_compressed_from_list_3():
+    tree = TreeNode.create_from_list_2([1, None, 2, 3, None, 4, 5])
+    assert TreeNode.to_array(tree) == [1, None, 2, None, None, 3, None, None, None, None, None, 4, 5]
