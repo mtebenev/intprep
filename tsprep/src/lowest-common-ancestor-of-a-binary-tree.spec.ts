@@ -3,7 +3,7 @@ import {TreeNode} from './utils/tree-node';
 /**
  * https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
  * tags: medium, tree
- * TODO: NOT SOLVED YET, the problem appears incredibly tricky
+ * TODO: this solution sucks. Check LC.
  */
 describe('Lowest Common Ancestor of a Binary Tree', () => {
   test('Case 1', () => {
@@ -28,48 +28,51 @@ describe('Lowest Common Ancestor of a Binary Tree', () => {
     const tree = TreeNode.createFromArray([1, 2, 3]);
     expect(CommonLowestAncestorOfaBinaryTree.lowestCommonAncestor(tree, tree.left!, tree)).toEqual(tree);
   });
+  test('Find path 1', () => {
+    const tree = TreeNode.createFromArray2([1, 2, 3, 4])!;
+    const node = TreeNode.findNodeByValue(tree, 4)!;
+    const path = CommonLowestAncestorOfaBinaryTree.findPathR(tree, node)!;
+    expect(path.map(n => n.val)).toEqual([1, 2, 4]);
+  });
+  test('Find path 2', () => {
+    const tree = TreeNode.createFromArray([3, 5, 1, 6, 2, 0, 8, null, null, 7, 4]);
+    const node = TreeNode.findNodeByValue(tree, 1)!;
+    const path = CommonLowestAncestorOfaBinaryTree.findPathR(tree, node)!;
+    expect(path.map(n => n.val)).toEqual([3, 1]);
+  });
 });
 
 class CommonLowestAncestorOfaBinaryTree {
-  private static n1: TreeNode | null;
-  private static n2: TreeNode | null;
 
   public static lowestCommonAncestor(root: TreeNode, p: TreeNode, q: TreeNode): TreeNode | null {
-    return this.lowestCommonAncestorRecursive(root, p, q);
+    const path1 = this.findPathR(root, p)!;
+    const path2 = this.findPathR(root, q)!;
+
+    let resultIdx = 0;
+    while(resultIdx < path1.length - 1
+      && resultIdx < path2.length - 1
+      && path1[resultIdx + 1] === path2[resultIdx + 1]) {
+      resultIdx++;
+    }
+    return path1[resultIdx];
   }
 
-  public static lowestCommonAncestorRecursive(root: TreeNode, p: TreeNode, q: TreeNode): TreeNode | null {
-    this.n1 = null;
-    this.n2 = null;
-    return this.lowestCommonAncestorR(root, p, q);
-  }
-
-  private static lowestCommonAncestorR(root: TreeNode | null, p: TreeNode, q: TreeNode): TreeNode | null {
-    if(root === null) {
+  public static findPathR(root: TreeNode | null, targetNode: TreeNode): TreeNode[] | null {
+    if(!root) {
       return null;
     }
 
-    let result = this.lowestCommonAncestorR(root.left, p, q);
-    if(result) {
-      return result;
+    if(root.val === targetNode.val) {
+      return [root];
     }
 
-    result = this.lowestCommonAncestorR(root.right, p, q);
-    if(result) {
-      return result;
-    }
+    const left = this.findPathR(root.left, targetNode);
+    const right = this.findPathR(root.right, targetNode);
 
-    if(this.n1 && this.n2) {
-      return root;
-    }
-
-    if(this.n1 === null && root === p) {
-      this.n1 = p;
-    }
-    if(this.n2 === null && root === q) {
-      this.n2 = q;
-    }
-
-    return (this.n1 && this.n2 && (root === this.n1 || root === this.n2)) ? root : null;
+    const result: TreeNode[] | null =
+      left ? [root].concat(left!)
+        : right ? [root].concat(right!)
+          : null;
+    return result;
   }
 }
