@@ -58,6 +58,58 @@ export class TreeNode {
   }
 
   /**
+   * Follows LC compressed format.
+   */
+  public static createFromArray2(values: Array<number | null>): TreeNode | null {
+    if(!values || values.length === 0) {
+      return null;
+    }
+    const rootValue = values[0];
+    if(rootValue === null) {
+      throw new Error('Invalid tree');
+    }
+
+    const root = new TreeNode(rootValue);
+    const nodeQueue = new Array<TreeNode | null>();
+    nodeQueue.push(root);
+
+    let index = 1;
+    while(index < values.length) {
+      const node = nodeQueue.shift();
+      if(!node) {
+        continue;
+      }
+
+      let leftNode = null;
+      let rightNode = null;
+      if(index < values.length) {
+        const leftValue = values[index];
+        leftNode = leftValue !== null
+          ? new TreeNode(leftValue)
+          : null;
+        index += 1;
+      }
+
+      if(index < values.length) {
+        const rightValue = values[index];
+        rightNode = rightValue !== null
+          ? new TreeNode(rightValue)
+          : null;
+        index += 1;
+      }
+
+      if(leftNode || rightNode) {
+        nodeQueue.push(leftNode);
+        nodeQueue.push(rightNode);
+      }
+
+      node.left = leftNode;
+      node.right = rightNode;
+    }
+    return root;
+  }
+
+  /**
    * Finds a node in the tree by the value.
    */
   public static findNodeByValue(root: TreeNode, value: number): TreeNode | null {
@@ -80,23 +132,32 @@ export class TreeNode {
     return result;
   }
 
-  /**
-   * Converts the tree to array
-   */
-  public static toArray(root: TreeNode): number[] {
-    const queue = [root];
+  public static toArray(root: TreeNode): Array<number | null> {
+    const nodeQueue: Array<TreeNode | null> = [root];
     const result = [];
-    while(queue.length > 0) {
-      const node = queue.shift()!;
-      result.push(node.val);
-      if(node.left) {
-        queue.push(node.left);
-      }
-      if(node.right) {
-        queue.push(node.right);
+
+    while(nodeQueue.length > 0) {
+      const node = nodeQueue.shift()!;
+      if(node != null) {
+        result.push(node.val);
+        nodeQueue.push(node.left);
+        nodeQueue.push(node.right);
+      } else {
+        result.push(null);
+        if(nodeQueue.some(n => n ? true : false)) {
+          nodeQueue.push(null);
+          nodeQueue.push(null);
+        }
       }
     }
 
-    return result;
+    let lastPos = result.length - 1;
+    let nodeCount = 0;
+    while(result[lastPos] === null) {
+      lastPos--;
+      nodeCount++;
+    }
+
+    return result.slice(undefined, result.length - nodeCount);
   }
 }
