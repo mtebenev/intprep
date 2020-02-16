@@ -1,9 +1,9 @@
-import {ListNode} from "./utils/list-node";
+import {ListNode} from '../utils/list-node';
 
 test('Reverse print', () => {
 
-  var str1 = 'hello world';
-  var arr1 = str1.split('');
+  let str1 = 'hello world';
+  const arr1 = str1.split('');
   reverseString(arr1);
   str1 = arr1.join('');
   expect(str1).toEqual('dlrow olleh');
