@@ -1,5 +1,5 @@
 # https://leetcode.com/explore/interview/card/top-interview-questions-medium/110/sorting-and-searching/802/
-# Tags: medium search
+# Tags: medium, search
 
 from typing import List
 import unittest
