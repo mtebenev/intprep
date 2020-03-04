@@ -1,5 +1,6 @@
 # https://leetcode.com/problems/shortest-way-to-form-string/
 # Tags: medium, greedy, array, dynamic programming
+# TODO: this is M*N solution. Optimize.
 
 
 from typing import DefaultDict, List
@@ -8,6 +9,10 @@ import math
 
 class Solution:
     def shortestWay(self, source: str, target: str) -> int:
+        result = self.shortestWay_mn(source, target)
+        return result
+
+    def shortestWay_my(self, source: str, target: str) -> int:
         # Form dictionary
         start_positions: DefaultDict[str, List[int]] = defaultdict(list)
         for pos, c in enumerate(source):
@@ -42,6 +47,30 @@ class Solution:
             sp += 1
         return result
 
+    # O(M*N), 10 times faster than the original.
+    def shortestWay_mn(self, source: str, target: str) -> int:
+        if len(target) == 0:
+            return 0
+        symbols_map = [False] * 26
+        for c in source:
+            symbols_map[ord(c)-ord('a')] = True
+
+        j = 0
+        i = 0
+        res = 1
+        while i < len(target):
+            if not symbols_map[ord(target[i]) - ord('a')]:
+                return -1
+            while j < len(source) and source[j] != target[i]:
+                j += 1
+            if j == len(source):
+                j = 0
+                res += 1
+            else:
+                i += 1
+                j += 1
+        return res
+
 
 def test_1():
     assert Solution().shortestWay('abcdeab', 'abc') == 1
@@ -56,4 +85,8 @@ def test_4():
     assert Solution().shortestWay('xyz', '') == 0
 
 def test_5():
-    assert Solution().shortestWay('', 'xyz') == -1
+    assert Solution().shortestWay('abc', 'xyz') == -1
+
+def test_6():
+    assert Solution().shortestWay('aaaaa', 'aaaaaaaaaaaaa') == 3
+
