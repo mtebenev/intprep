@@ -6,12 +6,19 @@ import {TreeNode} from './utils/tree-node';
  */
 describe('Binary tree inorder traversal', () => {
   test('Case 1', () => {
-    const tree = TreeNode.createFromArray([1, null, 2, 3, null]);
+    const tree = TreeNode.createFromArray2([1, null, 2, 3, null]);
     expect(BinaryTreeInorderTraversal.inorderTraversal(tree)).toEqual([1, 3, 2]);
   });
   test('Case 2', () => {
-    const tree = TreeNode.createFromArray([1, 2, 3, 4, 5, 6, 7]);
+    const tree = TreeNode.createFromArray2([1, 2, 3, 4, 5, 6, 7]);
     expect(BinaryTreeInorderTraversal.inorderTraversal(tree)).toEqual([4, 2, 5, 1, 6, 3, 7]);
+  });
+  test('Case 3', () => {
+    const tree = TreeNode.createFromArray2([1, 2, 3]);
+    expect(BinaryTreeInorderTraversal.inorderTraversal(tree)).toEqual([2, 1, 3]);
+  });
+  test('Case 4', () => {
+    expect(BinaryTreeInorderTraversal.inorderTraversal(null)).toEqual([]);
   });
 });
 
@@ -45,27 +52,24 @@ class BinaryTreeInorderTraversal {
 
   // Iterative
   public static inorderTraversalIterative(root: TreeNode | null): number[] {
-    if(root === null) {
-      return [];
-    }
-    const result: number[] = [];
-    const stack: Array<{n: TreeNode, p: boolean}> = [{n: root, p: false}];
-    while(stack.length > 0) {
-      const lastNode = stack[stack.length - 1];
-      if(!lastNode.p) {
-        if(lastNode.n.left !== null) {
-          stack.push({n: lastNode.n.left, p: false});
-        }
-        lastNode.p = true;
+    let currentNode = root;
+    const stack: TreeNode[] = [];
+    const result = [];
+    while(currentNode || stack.length > 0) {
+      if(!currentNode) {
+        currentNode = stack.pop()!;
       } else {
-        // Do
-        result.push(lastNode.n.val);
-        stack.pop();
-
-        // Right
-        if(lastNode.n.right !== null) {
-          stack.push({n: lastNode.n.right, p: false});
+        while(currentNode.left) {
+          stack.push(currentNode);
+          currentNode = currentNode!.left;
         }
+      }
+
+      result.push(currentNode.val);
+      if(currentNode.right) {
+        currentNode = currentNode!.right;
+      } else {
+        currentNode = null;
       }
     }
 
