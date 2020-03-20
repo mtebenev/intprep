@@ -6,10 +6,11 @@
 from typing import DefaultDict, List
 from collections import defaultdict
 import math
+from bisect import bisect_right, bisect_left
 
 class Solution:
     def shortestWay(self, source: str, target: str) -> int:
-        result = self.shortestWay_mn(source, target)
+        result = self.shortestWay_log(source, target)
         return result
 
     def shortestWay_my(self, source: str, target: str) -> int:
@@ -71,6 +72,51 @@ class Solution:
                 j += 1
         return res
 
+    # O(M*N), mem O(1)
+    def shortestWay_mem0(self, source: str, target: str) -> int:
+        if len(target) == 0:
+            return 0
+
+        i = 0 # target
+        res = 0
+        while i < len(target):
+            i_iteration = i
+            j = 0 # source
+            while j < len(source):
+                if i < len(target) and source[j] == target[i]:
+                    i += 1
+                j += 1
+
+            if i == i_iteration:
+                return -1
+            res += 1
+        return res
+
+    # O(LogN) use the binary search
+    def shortestWay_log(self, source: str, target: str) -> int:
+        if len(target) == 0:
+            return 0
+
+        symbols_map = [ [] for i in range(26) ]
+        for pos, c in enumerate(source):
+            symbols_map[ord(c)-ord('a')].append(pos)
+
+        res = 1
+        t_idx = 0
+        s_idx = 0
+        while t_idx < len(target):
+            next_symbol_list = symbols_map[ord(target[t_idx])-ord('a')]
+            if len(next_symbol_list) == 0:
+                return -1
+            next_s_idx = bisect_left(next_symbol_list, s_idx)
+            if next_s_idx != len(next_symbol_list):
+                s_idx = next_symbol_list[next_s_idx] + 1
+                t_idx += 1
+            else:
+                s_idx = 0
+                res += 1
+
+        return res
 
 def test_1():
     assert Solution().shortestWay('abcdeab', 'abc') == 1

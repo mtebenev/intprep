@@ -13,6 +13,10 @@ describe('Phone21', () => {
   });
 });
 
+/**
+ * https://leetcode.com/problems/design-hashmap/
+ * easy, design
+ */
 class MyHashMap {
 
   private bucketCount: number;
