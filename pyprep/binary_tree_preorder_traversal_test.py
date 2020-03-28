@@ -1,6 +1,7 @@
 # https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
 # tags: medium, tree
 # todo: there's an interesting solution with dfs
+# todo2: write state table for the iterative solution
 
 from utils.binary_tree_node import TreeNode
 from typing import List, Deque
